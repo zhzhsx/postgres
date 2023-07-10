@@ -1,0 +1,68 @@
+{
+    // Use IntelliSense to learn about possible attributes.
+    // Hover to view descriptions of existing attributes.
+    // For more information, visit: https://go.microsoft.com/fwlink/?linkid=830387
+    "version": "0.2.0",
+    "configurations": [
+        {
+            "name": "gdb-pg-sub",
+            "type": "cppdbg",
+            "request": "attach",
+            "program": "${workspaceFolder}/src/backend/postgres",
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                }
+            ]
+        },
+
+        {
+            "name": "gdb-pg",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/src/backend/postgres",
+            "args": ["-D", "/opt/pg/data"],
+            "stopAtEntry": false,
+            "cwd": "${workspaceFolder}",
+            "environment": [],
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for gdb",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "Set Disassembly Flavor to Intel",
+                    "text": "-gdb-set disassembly-flavor intel",
+                    "ignoreFailures": true
+                },
+                {
+                    "description": "no sigint",
+                    "text": "handle SIGUSR1 nostop noprint pass",
+                    "ignoreFailures": false
+                },
+                {
+                    // https://www.cnblogs.com/jfqy/p/14006118.html
+                    // deprecated: 启动太多子进程了，gdb不知道在调试哪个子进程
+                    "description": "debug sub process",
+                    "text": "set follow-fork-mode child",
+                    "ignoreFailures": false
+                }
+            ]
+        }
+    ]
+}
+// 全面介绍了clion中的调试方式 https://zhuanlan.zhihu.com/p/591360747
+// 可能有用的信息 https://wiki.postgresql.org/wiki/Getting_a_stack_trace_of_a_running_PostgreSQL_backend_on_Linux/BSD
+// FAQ https://wiki.postgresql.org/wiki/Developer_FAQ#How_do_I_stop_gdb_getting_interrupted_by_SIGUSR1_all_the_time.3F
+// LLDB https://stackoverflow.com/questions/11984051/how-to-tell-lldb-debugger-not-to-handle-sigbus
